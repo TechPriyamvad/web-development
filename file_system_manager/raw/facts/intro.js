@@ -1,0 +1,14 @@
+//////////////////////////////////////////////////////////////////Jvascript Introduction/////////////////////////////////////////////////////////////
+
+
+//tool for printing
+//console.log("Intro to web development");
+
+//tool for variable declaration
+let a;
+
+//variable initialisation
+a=23;
+
+
+console.log("a is",a);
