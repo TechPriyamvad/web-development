@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <button>sayHello</button>
+  <div></div>
+  <script>
+    // Q- On clicking the button append hello to the page
+    /* let btn = document.querySelector("button");
+    btn.addEventListener("click", function () {
+      // hello
+      let p = document.createElement("p");
+      p.innerHTML = `Hello!`;
+
+      let body = document.querySelector("body");
+      body.appendChild(p);
+    }) */
+    let btnClick = document.querySelector('button');
+    btnClick.addEventListener('click',function(e)
+    {
+        let createPTag = document.createElement('p');
+        let selectDiv = document.querySelector('div');
+        createPTag.textContent = "hello!!";
+        selectDiv.appendChild(createPTag);
+    })
+  </script>
+</body>
+
+</html>
