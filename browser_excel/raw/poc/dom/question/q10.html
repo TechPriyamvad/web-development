@@ -24,8 +24,39 @@
     <input type="text" id="pass" />
     <p>Caps on!</p>
     <script>
-      //Q- Write a script which keeps checking the password being entered. It should check if capslock is on or off if its on it should not allow to type and show "caps on" on screen, also it should only allow to type if the shift in pressed down.
-      
+      //Q- Write a script which keeps checking the password being entered. 
+      //It should check if capslock is on or off 
+      //if its on it should not allow to type and show "caps on" on screen
+      //also it should only allow to type if the shift in pressed down.
+      let isShift = false;
+      let isCaps = true;
+      let input = document.querySelector("#pass");
+      let text = document.querySelector("p");
+
+      input.addEventListener("keypress", function (e) {
+        //checks whether caplock key is pressed or not
+        if (e.getModifierState("CapsLock")) {
+          text.style.display = "block";
+          e.preventDefault();
+        } else {
+          text.style.display = "none";
+        }
+        if (!isShift) e.preventDefault();
+      });
+
+      //when shift key is pressed
+      document.addEventListener("keydown", function (e) {
+        if (e.key == "Shift" && !isShift) {
+          isShift = true;
+        }
+      });
+
+      //when shift key is released
+      document.addEventListener("keyup", function (e) {
+        if (e.key == "Shift") {
+          isShift = false;
+        }
+      });
     
     </script>
   </body>
