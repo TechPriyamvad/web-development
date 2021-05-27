@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCam</title>
+    
+</head>
+<body>
+    <video  controls autoplay></video>
+    <audio controls autoplay></audio>
+    <script>
+        let videoPlayer = document.querySelector('video');
+        let audioPlayer = document.querySelector('audio');
+        
+        let constraints = {video:true, audio:false}
+        //navigator.mediaDevices -> return a media object
+        //which provides access to connected media input devices like cameras and microphones, as well as screen sharing
+        //getUserMedia -> browser take permission from user for hardware access
+        //mediastream -> contain audio and video track
+        //
+        navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
+            //auto start audio player
+            audioPlayer.srcObject=mediaStream;
+
+            //auto start video player
+            videoPlayer.srcObject=mediaStream;
+        
+        //error handling
+        }).catch(function(err){
+            console.log(err);
+        })
+    </script>
+</body>
+</html>

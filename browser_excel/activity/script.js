@@ -1,4 +1,4 @@
-let iconContainer = document.querySelector(".icon-container");
+/* let iconContainer = document.querySelector(".icon-container");
 let sheetList = document.querySelector(".sheet-list");
 let firstSheet = document.querySelector(".sheet");
 firstSheet.addEventListener("click", handleClick);
@@ -40,4 +40,4 @@ function handleClick(e) {
     }
     sheet.classList.add("active");
 
-}
+} */
