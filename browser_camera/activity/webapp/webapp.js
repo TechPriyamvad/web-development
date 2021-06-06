@@ -1,105 +1,140 @@
-//select record button
-let vidRecordBtn = document.querySelector('.recordBtnId');
-
-//hardare devices which we want to access and give permissions
-let constraints = { video: true, audio: true };
-
+let constraints = {video:true, audio:true};
+let videoPlayer = document.querySelector('video');
+let vidRecordBtn = document.querySelector('#record-video');
 let captureBtn = document.querySelector('#click-picture');
-//variable for recording related work
 let mediaRecorder;
-
-//initial state of recording button
 let recordState = false;
-
-//stores recording data in chunks
 let chunks = [];
 
-let videoPlayer = document.querySelector('video');
-//let audioPlayer = document.querySelector('audio');
+let filter = '';
+let currZoom =1;
+let zoomInBtn = document.getElementById('in');
+let zoomOutBtn = document.getElementById('out');
 
-//when recording button is clicked start 
-vidRecordBtn.addEventListener("click", function () {
+zoomInBtn.addEventListener('click',function(){
+    console.log(videoPlayer.style.transform);
+    let vidScale = Number(
+        videoPlayer.style.transform.split("(")[1].split(")")[0]
+    )
+    if(vidScale<3)
+    {
+        currZoom = vidScale+0.1;
+        videoPlayer.style.transform=`scale(${currZoom})`;
+    }
+});
 
-    //wait for media recorder to start
-    if (mediaRecorder != undefined) {
-        //initial state of button
-        //false:button is not clicked
-        //true:button is clicked 
+zoomOutBtn.addEventListener('click',function(){
+    console.log(videoPlayer.style.transform);
+    let vidScale = Number(
+        videoPlayer.style.transform.split("(")[1].split(")")[0]
+    )
+    if(vidScale>1)
+    {
+        currZoom = vidScale-0.1;
+        videoPlayer.style.transform=`scale(${currZoom})`;
+    }
+});
+
+
+
+let allFilters = document.querySelectorAll('.filter');
+for(let i=0;i<allFilters.length;i++)
+{
+    allFilters[i].addEventListener('click',function(e){
+        filter = e.currentTarget.style.backgroundColor;
+        removeFilter();
+        addFilterToScreen(filter);
+    })
+}
+
+function addFilterToScreen(filterColor)
+{
+    let filter = document.createElement('div');
+    filter.classList.add('on-screen-filter');
+    filter.style.height='100vh';
+    filter.style.width='100vw';
+    filter.style.backgroundColor=`${filterColor}`;
+    filter.style.position = 'fixed';
+    filter.style.top= '0px';
+    document.querySelector('body').appendChild(filter);
+}
+function removeFilter(){
+    let el = document.querySelector('.on-screen-filter');
+    if(el)
+    {
+        el.remove();
+    }
+}
+
+
+
+
+
+vidRecordBtn.addEventListener("click",function(){
+    if(mediaRecorder!=undefined)
+    {
+        removeFilter();
+        let innerDiv = vidRecordBtn.querySelector('#record-div');
+    if(recordState==false)
+    {
+        recordState=true;
+        innerDiv.classList.add('recording-animation');
+        currZoom=1
+        videoPlayer.style.transform = `scale(${currZoom})`
+        mediaRecorder.start();
+    }
+    else{
+        recordState=false;
+        innerDiv.classList.remove('recording-animation');
+        mediaRecorder.stop();
         
-        if (recordState == false) {
-            recordState = true;
-            //recording start
-            mediaRecorder.start();
-            //change text of button
-            vidRecordBtn.innerText = 'Recording...'
-        }
-        else {
-            
-            recordState =/*  */ false;
-            //recording stopped
-            mediaRecorder.stop();
-            //change text of button
-            vidRecordBtn.innerText = 'Record';
-        }
     }
+}
 })
-//media devices -> access hardware device
-//getUserMedia -> function to get permissions for hardware device
-//Permissions are allow and deny
-navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
+navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
     videoPlayer.srcObject=mediaStream;
-    //audioPlayer.srcObject=mediaStream;
-    //create media recorder
-    //mediastream -> stores recording data
-    mediaRecorder = new MediaRecorder(mediaStream);
-    //when recording button is clicked and recorded data is available to browser
-    //dump recorded data into chunks array
-    mediaRecorder.ondataavailable = function (e) {
-        chunks.push(e.data)
-    }
-    //when recording button is clicked one more time
-    //stop recording 
-    //save data into a file
-    mediaRecorder.onstop = function () {
-        //store data of recording from array into a mp4 file
-        //file is immutable -> it can only be read 
-        let blob = new Blob(chunks, { type: 'video/mp4' });
-        chunks = [];
-
-        //downloading above created file
-        let blobUrl = URL.createObjectURL(blob);
-        var link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = 'video.mp4';
-        link.click();
-        link.remove();
-    }
-
-
-})
-//handling error
-//if permission for video is not allowed by the browser
-.catch(function (err) {
+  mediaRecorder = new MediaRecorder(mediaStream);
+  mediaRecorder.ondataavailable = function(e){
+      chunks.push(e.data)
+  }
+  mediaRecorder.onstop=function()
+  {
+      let blob = new Blob(chunks,{type:'video/mp4'});
+      chunks =[];
+      addMediaToGallery(blob,'video');
+  }
+}).catch(function(err){
     console.log(err);
 })
-
 captureBtn.addEventListener('click',function()
 {
-    console.log('clicked');
-    capture();
-})
+    let innerDiv = captureBtn.querySelector('#click-div');
+    innerDiv.classList.add('capture-animation');
+    console.log(('clicked'));
+    capture(filter);
 
-function capture()
+    setTimeout(function(){
+        innerDiv.classList.remove('capture-animation');
+    },1000);
+})
+function capture(filter)
 {
-    let c=document.createElement('canvas');
-    c.width=videoPlayer.videoWidth;
-    c.height=videoPlayer.videoHeight;
-    let tool=c.getContext('2d');
+    let c = document.createElement('canvas');
+    c.width = videoPlayer.videoWidth;
+    c.height = videoPlayer.videoHeight;
+    let tool = c.getContext('2d');
+    //origin shifting
+    tool.translate(c.width/2,c.height/2);
+    //scaling
+    tool.scale(currZoom,currZoom);
+    //moving back the origin
+    tool.translate(-c.width/2,-c.height/2);
     tool.drawImage(videoPlayer,0,0);
-    let link=document.createElement('a');
-    link.download='image.png';
-    link.href=c.toDataURL();-
-    link.click();
-    link.remove();
+    if(filter!='')
+    {
+        tool.fillStyle = filter;
+        tool.fillRect(0,0,c.width,c.height);
+    }
+    addMediaToGallery(c.toDataURL(),'img');
     c.remove();
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing board</title>
+    <link rel="stylesheet" href="drawingboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <!-- To get rid of the scrollbars, we need to remove the margin and also set overflow to hidden -->
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        
+    </style>
+</head>
+
+<body>
+    <div class="menu-bar">
+        <div class="color-panel">
+            <div class="color red" color="red"></div>
+            <div class="color blue" color="blue"></div>
+            <div class="color green" color="green"></div>
+            <div class="color black" color="black"></div>
+        </div>
+        <input type=color class="color-picker">
+        
+        <div class="line-width">
+            <div class="line" ><i class="fal fa-horizontal-rule small-line " width = "3"></i></div>
+            <div class="line" ><i class="fal fa-horizontal-rule medium-line" width = "9"></i></div>
+            <div class="line" ><i class="fal fa-horizontal-rule large-line" width = "18"></i></div>
+        </div>
+        <i class="fab fa-creative-commons-remix erase-page"></i>
+        
+        <input type="range" min="1" max="70" class="pen-range">
+        
+    </div>
+    
+    <canvas id='board'></canvas>
+</body>
+<script src='drawingboard.js'></script>
+<script src="colorpicker.js"></script>
+<script src="lineWidth.js"></script>
+<script src="https://kit.fontawesome.com/67848a2f54.js" crossorigin="anonymous"></script>
+</html>

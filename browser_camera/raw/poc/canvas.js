@@ -82,7 +82,7 @@ tool.stroke();
 
 /****************************Drawing lines with the help of mouse************************************/
 //tool.strokeStyle = 'yellow';
-    tool.lineWidth = 6;
+    tool.lineWidth = 3;
 
     //allow only to draw lines while mouse is being clicked
     let isMouseDown = false;
